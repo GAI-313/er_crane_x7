@@ -12,6 +12,9 @@
   <depend>crane_x7</depend>
   <depend>crane_x7_description</depend>
 
+  <depend>er_crane_x7_bringup</depend>
+  <depend>er_crane_x7_description</depend>
+
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 
