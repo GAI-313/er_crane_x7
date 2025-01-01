@@ -3,7 +3,8 @@ from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration
 from launch.launch_context import LaunchContext
 from launch.actions import DeclareLaunchArgument, OpaqueFunction, LogInfo, GroupAction
-from launch_ros.actions import Node
+from launch_ros.actions import Node, ComposableNodeContainer
+from launch_ros.descriptions import ComposableNode
 
 from ament_index_python.packages import get_package_share_directory
 
@@ -161,6 +162,22 @@ def context_launch_description(context:LaunchContext, *args, **kwargs):
     )
 
 
+    ## containers
+    container = ComposableNodeContainer(
+        name="moveit_servo_container",
+        namespace="/",
+        package="rclcpp_components",
+        executable="component_container_mt",
+        composable_node_descriptions=[
+            ComposableNode(
+                package="moveit_servo",
+                plugin="moveit_servo::JoyToServoPub",
+                name="controller_to_servo_node",
+            )
+        ]
+    )
+
+
     ## debug message
     loggers = GroupAction(
         actions=[
@@ -175,7 +192,8 @@ def context_launch_description(context:LaunchContext, *args, **kwargs):
 
     return [
         loggers,
-        node_move_group, node_moveit_servo, node_robot_state_publisher, node_stratic_tf, node_rviz
+        node_move_group, node_moveit_servo, node_robot_state_publisher, node_stratic_tf, node_rviz,
+        container
     ]
 
 

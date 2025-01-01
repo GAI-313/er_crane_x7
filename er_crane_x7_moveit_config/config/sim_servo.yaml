@@ -1,10 +1,10 @@
 use_gazebo: true
 
-command_in_type: "unitless"
-scale:
-  linear:  0.1
-  rotational:  0.1
-  joint: 0.1
+command_in_type: "speed_units"
+#scale:
+#  linear:  0.1
+#  rotational:  0.1
+#  joint: 0.1
 
 publish_period: 0.034
 low_latency_mode: false
@@ -23,7 +23,8 @@ move_group_name: arm
 planning_frame: base_link
 
 ee_frame_name: crane_x7_gripper_base_link
-robot_link_command_frame: base_link
+#robot_link_command_frame: base_link
+robot_link_command_frame: crane_x7_gripper_base_link
 
 incoming_command_timeout:  0.1
 num_outgoing_halt_msgs_to_publish: 4
