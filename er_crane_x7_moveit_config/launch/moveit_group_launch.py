@@ -2,7 +2,7 @@
 from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration
 from launch.launch_context import LaunchContext
-from launch.actions import DeclareLaunchArgument, OpaqueFunction
+from launch.actions import DeclareLaunchArgument, OpaqueFunction, LogInfo, GroupAction
 from launch_ros.actions import Node
 
 from ament_index_python.packages import get_package_share_directory
@@ -37,6 +37,7 @@ def context_launch_description(context:LaunchContext, *args, **kwargs):
     config_kinematics_description = LaunchConfiguration('kinematics_description')
     config_ompl_planning_description = LaunchConfiguration('ompl_planning_description')
     config_controllers_description = LaunchConfiguration('controllers_description')
+    config_servo_description = LaunchConfiguration('servo_description')
     config_rviz = LaunchConfiguration('rviz')
 
 
@@ -91,6 +92,12 @@ def context_launch_description(context:LaunchContext, *args, **kwargs):
                                          'publish_geometry_updates': True,
                                          'publish_state_updates': True,
                                          'publish_transforms_updates': True}
+    
+    param_servo_description = {'moveit_servo' : load_yaml(
+        context.perform_substitution(
+            config_servo_description,
+        )
+    )}
 
 
     ## executable actions
@@ -107,6 +114,19 @@ def context_launch_description(context:LaunchContext, *args, **kwargs):
             param_trajectory_execution,
             param_planning_scene_monitor,
             param_controllers_description
+        ]
+    )
+
+    node_moveit_servo = Node(
+        package='moveit_servo',
+        executable='servo_node_main',
+        name='servo_node',
+        output='screen',
+        parameters=[
+            param_servo_description,
+            param_robot_description,
+            param_semantic_description,
+            param_kinematics_description
         ]
     )
 
@@ -141,8 +161,21 @@ def context_launch_description(context:LaunchContext, *args, **kwargs):
     )
 
 
+    ## debug message
+    loggers = GroupAction(
+        actions=[
+            LogInfo(msg=["LOAD SEMANTIC_DESCRIPTION:: ", config_semantic_description]),
+            LogInfo(msg=["LOAD KINEMATICS DESCRIPTION:: ", config_kinematics_description]),
+            LogInfo(msg=["LOAD JOINT LIMITS DESCRIPTION:: ", config_joint_limits_description]),
+            LogInfo(msg=["LOAD CONTROLLERS DESCRIPTION:: ", config_controllers_description]),
+            LogInfo(msg=["LOAD SERVO YAML:: ", config_servo_description]),
+        ]
+    )
+
+
     return [
-        node_move_group, node_robot_state_publisher, node_stratic_tf, node_rviz
+        loggers,
+        node_move_group, node_moveit_servo, node_robot_state_publisher, node_stratic_tf, node_rviz
     ]
 
 
@@ -194,6 +227,11 @@ def generate_launch_description():
         default_value=os.path.join(prefix_moveit_config, 'controllers.yaml'),
         description=''
     )
+    declare_servo_description = DeclareLaunchArgument(
+        'servo_description',
+        default_value=os.path.join(prefix_moveit_config, 'servo.yaml'),
+        description=''
+    )
     declare_rviz = DeclareLaunchArgument(
         'rviz',
         default_value=prefix_default_rviz,
@@ -206,6 +244,7 @@ def generate_launch_description():
     ld.add_action(declare_kinematics_description)
     ld.add_action(declare_ompl_planning_description)
     ld.add_action(declare_controllers_description)
+    ld.add_action(declare_servo_description)
     ld.add_action(declare_rviz)
 
 
