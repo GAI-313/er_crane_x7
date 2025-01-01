@@ -27,7 +27,7 @@ def generate_launch_description():
 
     ## prefix
     prefix_crane_x7_gazebo = get_package_share_directory('crane_x7_gazebo')
-    prefix_moveit_config = get_package_share_directory('crane_x7_moveit_config')
+    prefix_moveit_config = get_package_share_directory('er_crane_x7_moveit_config')
     prefix_world_file = os.path.join(
         prefix_crane_x7_gazebo,
         'worlds',
@@ -43,6 +43,7 @@ def generate_launch_description():
     ## configurations
     config_world_file = LaunchConfiguration('world_file')
     config_gui_config = LaunchConfiguration('gui_config')
+    config_use_d435 = LaunchConfiguration('use_d435')
 
 
     ## declare arguments
@@ -54,14 +55,20 @@ def generate_launch_description():
         'gui_config', default_value=prefix_gui_config,
         description=''
     )
+    declare_use_d435 = DeclareLaunchArgument(
+        'use_d435', default_value='true',
+        description=''
+    )
 
     ld.add_action(declare_world_file)
     ld.add_action(declare_gui_config)
+    ld.add_action(declare_use_d435)
 
 
     ## load description
     dl = RobotDescriptionLoader()
     dl.use_gazebo = 'true'
+    dl.use_d435 = config_use_d435
     dl.gz_control_config_package = 'crane_x7_control'
     dl.gz_control_config_file_path = 'config/crane_x7_controllers.yaml'
     description = dl.load()
@@ -126,9 +133,9 @@ def generate_launch_description():
     launch_moveit_group = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             prefix_moveit_config,
-            '/launch/run_move_group.launch.py'
+            '/launch/moveit_group_launch.py'
         ]),
-        launch_arguments={'loaded_description': description}.items()
+        launch_arguments={'robot_description': description}.items()
     )
 
     ld.add_action(launch_moveit_group)
