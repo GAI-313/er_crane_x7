@@ -30,13 +30,32 @@
     </group_state>
     <group_state name="home" group="arm">
         <joint name="crane_x7_lower_arm_fixed_part_joint" value="0.0563" />
-        <joint name="crane_x7_lower_arm_revolute_part_joint" value="0.4817" />
+        <joint name="crane_x7_lower_arm_revolute_part_joint" value="-1.13" />
         <joint name="crane_x7_shoulder_fixed_part_pan_joint" value="0" />
-        <joint name="crane_x7_shoulder_revolute_part_tilt_joint" value="0.3979" />
-        <joint name="crane_x7_upper_arm_revolute_part_rotate_joint" value="-2.1994" />
+        <joint name="crane_x7_shoulder_revolute_part_tilt_joint" value="1.57" />
+        <joint name="crane_x7_upper_arm_revolute_part_rotate_joint" value="-2.61" />
         <joint name="crane_x7_upper_arm_revolute_part_twist_joint" value="0" />
-        <joint name="crane_x7_wrist_joint" value="0" />
+        <joint name="crane_x7_wrist_joint" value="1.57" />
     </group_state>
+    <group_state name="gaze" group="arm">
+        <joint name="crane_x7_lower_arm_fixed_part_joint" value="0" />
+        <joint name="crane_x7_lower_arm_revolute_part_joint" value="-1.57" />
+        <joint name="crane_x7_shoulder_fixed_part_pan_joint" value="0" />
+        <joint name="crane_x7_shoulder_revolute_part_tilt_joint" value="0" />
+        <joint name="crane_x7_upper_arm_revolute_part_rotate_joint" value="0" />
+        <joint name="crane_x7_upper_arm_revolute_part_twist_joint" value="0" />
+        <joint name="crane_x7_wrist_joint" value="1.57" />
+    </group_state>
+    <group_state name="push_hand" group="arm">
+        <joint name="crane_x7_lower_arm_fixed_part_joint" value="0" />
+        <joint name="crane_x7_lower_arm_revolute_part_joint" value="-1.57" />
+        <joint name="crane_x7_shoulder_fixed_part_pan_joint" value="0" />
+        <joint name="crane_x7_shoulder_revolute_part_tilt_joint" value="0.349" />
+        <joint name="crane_x7_upper_arm_revolute_part_rotate_joint" value="-0.785" />
+        <joint name="crane_x7_upper_arm_revolute_part_twist_joint" value="0" />
+        <joint name="crane_x7_wrist_joint" value="-1.57" />
+    </group_state>
+
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
     <end_effector name="end_effector" parent_link="crane_x7_gripper_base_link" group="gripper" />
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
