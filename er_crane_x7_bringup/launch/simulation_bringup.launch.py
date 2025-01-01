@@ -28,6 +28,7 @@ def generate_launch_description():
     ## prefix
     prefix_crane_x7_gazebo = get_package_share_directory('crane_x7_gazebo')
     prefix_moveit_config = get_package_share_directory('er_crane_x7_moveit_config')
+    prefix_er_crane_x7_config = get_package_share_directory('er_crane_x7_config')
     prefix_world_file = os.path.join(
         prefix_crane_x7_gazebo,
         'worlds',
@@ -38,12 +39,17 @@ def generate_launch_description():
         'gui',
         'gui.config'
     )
+    prefix_default_rviz = os.path.join(
+        prefix_er_crane_x7_config, 'rviz',
+        'sim_viewer.rviz'
+    )
 
 
     ## configurations
     config_world_file = LaunchConfiguration('world_file')
     config_gui_config = LaunchConfiguration('gui_config')
     config_use_d435 = LaunchConfiguration('use_d435')
+    config_rviz = LaunchConfiguration('rviz')
 
 
     ## declare arguments
@@ -59,10 +65,16 @@ def generate_launch_description():
         'use_d435', default_value='true',
         description=''
     )
+    declare_rviz = DeclareLaunchArgument(
+        'rviz',
+        default_value=prefix_default_rviz,
+        description=''
+    )
 
     ld.add_action(declare_world_file)
     ld.add_action(declare_gui_config)
     ld.add_action(declare_use_d435)
+    ld.add_action(declare_rviz)
 
 
     ## load description
@@ -135,7 +147,10 @@ def generate_launch_description():
             prefix_moveit_config,
             '/launch/moveit_group_launch.py'
         ]),
-        launch_arguments={'robot_description': description}.items()
+        launch_arguments={
+            'robot_description': description,
+            'rviz' : config_rviz
+        }.items()
     )
 
     ld.add_action(launch_moveit_group)
