@@ -14,6 +14,9 @@
 
   <depend>crane_x7</depend>
 
+  <depend>er_crane_x7_config</depend>
+  <depend>er_crane_x7_description</depend>
+
   <export>
     <build_type>ament_cmake</build_type>
   </export>
