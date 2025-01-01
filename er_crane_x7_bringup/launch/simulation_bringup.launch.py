@@ -8,6 +8,7 @@ from launch.actions import (
     IncludeLaunchDescription
 )
 from launch_ros.actions import Node, SetParameter
+from launch.conditions import IfCondition, UnlessCondition
 
 from er_crane_x7_description.robot_description_loader import RobotDescriptionLoader
 
@@ -29,6 +30,7 @@ def generate_launch_description():
     prefix_crane_x7_gazebo = get_package_share_directory('crane_x7_gazebo')
     prefix_moveit_config = get_package_share_directory('er_crane_x7_moveit_config')
     prefix_er_crane_x7_config = get_package_share_directory('er_crane_x7_config')
+    prefix_er_crane_x7_description = get_package_share_directory('er_crane_x7_description')
     prefix_world_file = os.path.join(
         prefix_crane_x7_gazebo,
         'worlds',
@@ -42,6 +44,10 @@ def generate_launch_description():
     prefix_default_rviz = os.path.join(
         prefix_er_crane_x7_config, 'rviz',
         'sim_viewer.rviz'
+    )
+    prefix_d435_bridge = os.path.join(
+        prefix_er_crane_x7_description, 'config',
+        'd435_bridge.yaml'
     )
 
 
@@ -130,7 +136,16 @@ def generate_launch_description():
         package='ros_gz_bridge',
         executable='parameter_bridge',
         arguments=['/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock'],
-        output='screen'
+        output='screen',
+        condition=UnlessCondition(config_use_d435)
+    )
+
+    node_gz_d435_bridge = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        parameters=[{'config_file': prefix_d435_bridge}],
+        output='screen',
+        condition=IfCondition(config_use_d435)
     )
 
     ld.add_action(execute_ign_gazebo)
@@ -139,6 +154,7 @@ def generate_launch_description():
     ld.add_action(execute_spawn_gripper_controller)
     ld.add_action(node_spawn_entity)
     ld.add_action(node_gz_bridge)
+    ld.add_action(node_gz_d435_bridge)
 
 
     ## executable launch

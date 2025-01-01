@@ -10,7 +10,7 @@ class RobotDescriptionLoader():
 
     def __init__(self):
         self.robot_description_path = os.path.join(
-            get_package_share_directory('crane_x7_description'),
+            get_package_share_directory('er_crane_x7_description'),
             'urdf',
             'crane_x7.urdf.xacro')
         self.port_name = '/dev/ttyUSB0'

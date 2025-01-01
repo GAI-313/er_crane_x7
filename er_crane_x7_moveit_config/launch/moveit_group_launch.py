@@ -122,7 +122,7 @@ def context_launch_description(context:LaunchContext, *args, **kwargs):
         package='robot_state_publisher',
         executable='robot_state_publisher',
         name='robot_state_publisher',
-        output='both',
+        output='screen',
         parameters=[param_robot_description]
     )
 
