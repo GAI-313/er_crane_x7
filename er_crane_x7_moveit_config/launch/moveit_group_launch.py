@@ -114,7 +114,7 @@ def context_launch_description(context:LaunchContext, *args, **kwargs):
         package='tf2_ros',
         executable='static_transform_publisher',
         name='static_transform_publisher',
-        output='log',
+        output='own_log',
         arguments=['0.0', '0.0', '0.0', '0.0', '0.0', '0.0', 'world', 'base_link']
     )
 
