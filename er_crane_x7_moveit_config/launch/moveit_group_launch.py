@@ -1,8 +1,15 @@
 #!/usr/bin/env python3
 from launch import LaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch.launch_context import LaunchContext
-from launch.actions import DeclareLaunchArgument, OpaqueFunction, LogInfo, GroupAction
+from launch.actions import (
+    DeclareLaunchArgument,
+    OpaqueFunction,
+    LogInfo,
+    GroupAction,
+    IncludeLaunchDescription
+)
 from launch_ros.actions import Node, ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
 
@@ -162,6 +169,20 @@ def context_launch_description(context:LaunchContext, *args, **kwargs):
     )
 
 
+    ## launch
+    launch_controller_server = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            get_package_share_directory('er_crane_x7_controller'),
+            '/launch/controller_server_launch.py'
+        ]),
+        launch_arguments={
+            'robot_description' : config_robot_description,
+            'semantic_description' : config_semantic_description,
+            'joint_limits_description' : config_joint_limits_description
+        }.items()
+    )
+
+
     ## containers
     container = ComposableNodeContainer(
         name="moveit_servo_container",
@@ -193,6 +214,7 @@ def context_launch_description(context:LaunchContext, *args, **kwargs):
     return [
         loggers,
         node_move_group, node_moveit_servo, node_robot_state_publisher, node_stratic_tf, node_rviz,
+        launch_controller_server,
         container
     ]
 
