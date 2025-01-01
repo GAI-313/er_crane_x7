@@ -1,0 +1,7 @@
+# Goal state define service .
+# when transform to target goal state position, response result is true.
+
+string goal_state home      # default is home pose
+float32 max_vel 0.1      # default is home pose
+---
+bool result false           # false is failure transform target goal state position.
