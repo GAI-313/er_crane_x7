@@ -16,6 +16,14 @@ import os
 import yaml
 
 
+def load_file(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            return file.read()
+    except EnvironmentError:  # parent of IOError, OSError *and* WindowsError where available
+        return None
+
+
 def load_yaml(file_path):
     try:
         with open(file_path, 'r') as file:
@@ -33,7 +41,11 @@ def context_launch_description(context:LaunchContext, *args, **kwargs):
 
     ## parameters
     param_robot_description = {'robot_description': config_robot_description}
-    param_semantic_description = {'robot_description_semantic': config_semantic_description}
+    param_semantic_description = {'robot_description_semantic' : load_file(
+        context.perform_substitution(
+            config_semantic_description
+        )
+    )}
     param_planning_description = {'robot_description_planning' : load_yaml(
         context.perform_substitution(
             config_joint_limits_description

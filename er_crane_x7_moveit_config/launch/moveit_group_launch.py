@@ -51,7 +51,6 @@ def context_launch_description(context:LaunchContext, *args, **kwargs):
 
     ## parameters
     param_robot_description = {'robot_description': config_robot_description}
-    param_semantic_description = {'robot_description_semantic': config_semantic_description}
     param_ompl_planning_descriptiong = {'move_group': {
         'planning_plugin': 'ompl_interface/OMPLPlanner',
         'request_adapters': 'default_planner_request_adapters/AddTimeOptimalParameterization \
