@@ -13,6 +13,7 @@
   <test_depend>ament_lint_common</test_depend>
 
   <depend>er_crane_x7_srvs</depend>
+  <depend>er_crane_x7_moveit_config</depend>
 
   <export>
     <build_type>ament_cmake</build_type>
