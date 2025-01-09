@@ -38,6 +38,8 @@ private:
     target_pose.position.z = request->z;
     target_pose.orientation = tf2::toMsg(q);
 
+    move_group_arm_->setPoseReferenceFrame(request->ref_frame_id);
+    move_group_arm_->setMaxVelocityScalingFactor(request->vel_scale);
     move_group_arm_->setPoseTarget(target_pose);
     bool success = (move_group_arm_->move() == moveit::core::MoveItErrorCode::SUCCESS);
     

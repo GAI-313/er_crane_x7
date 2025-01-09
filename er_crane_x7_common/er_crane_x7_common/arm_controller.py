@@ -25,7 +25,7 @@ class SimpleArmController(Node):
         while not self._cli_pose.wait_for_service(timeout_sec=10) or not self._cli_grip.wait_for_service(timeout_sec=10):
             self.get_logger().error('server is not running')
 
-    def ee_abs_pose(self, x: float=0., y: float=0., z: float=0.2, yaw: float=90., pitch: float=0., roll: float=90., wait: bool=True) -> bool:
+    def ee_abs_pose(self, x: float=0., y: float=0., z: float=0.2, yaw: float=90., pitch: float=0., roll: float=90., scale: float=1.0, wait: bool=True) -> bool:
         ee_pose = SetEEPose.Request()
         ee_pose.x = x
         ee_pose.y = y
@@ -33,6 +33,7 @@ class SimpleArmController(Node):
         ee_pose.roll = float(roll)
         ee_pose.pitch = float(pitch)
         ee_pose.yaw = float(yaw)
+        ee_pose.vel_scale = scale
 
         future = self._cli_pose.call_async(ee_pose)
         if wait: rclpy.spin_until_future_complete(self, future); return future.result().success
@@ -62,7 +63,7 @@ def main(args=None):
     rclpy.init(args=args)
     arm_control = SimpleArmController()
 
-    arm_control.ee_abs_pose(z=0.4)
+    arm_control.ee_abs_pose(yaw=0, roll=0, z=0.25)
 
 if __name__ == '__main__':
     main()
