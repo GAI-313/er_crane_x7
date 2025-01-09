@@ -35,7 +35,8 @@ def generate_launch_description():
         prefix_er_crane_x7_moveit_config, 'config'
     )
     prefix_world_file = os.path.join(
-        prefix_crane_x7_gazebo,
+        #prefix_crane_x7_gazebo,
+        prefix_er_crane_x7_config,
         'worlds',
         'table.sdf'
     )
