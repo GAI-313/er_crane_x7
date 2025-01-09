@@ -10,6 +10,7 @@ find_package(ament_cmake REQUIRED)
 
 install(DIRECTORY
   rviz
+  worlds
   DESTINATION share/${PROJECT_NAME}/
 )
 
