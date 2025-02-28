@@ -14,7 +14,7 @@ class RobotDescriptionLoader():
             'urdf',
             'crane_x7.urdf.xacro')
         self.parent = 'base_link'
-        self.gen_link = 'true'
+        self.gen_link = 'false'
         self.port_name = '/dev/ttyUSB0'
         self.baudrate = '3000000'
         self.timeout_seconds = '1.0'
