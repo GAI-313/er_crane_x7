@@ -99,12 +99,6 @@ def context_launch_description(context:LaunchContext, *args, **kwargs):
                                          'publish_geometry_updates': True,
                                          'publish_state_updates': True,
                                          'publish_transforms_updates': True}
-    
-    param_servo_description = {'moveit_servo' : load_yaml(
-        context.perform_substitution(
-            config_servo_description,
-        )
-    )}
 
 
     ## executable actions
@@ -121,19 +115,6 @@ def context_launch_description(context:LaunchContext, *args, **kwargs):
             param_trajectory_execution,
             param_planning_scene_monitor,
             param_controllers_description
-        ]
-    )
-
-    node_moveit_servo = Node(
-        package='moveit_servo',
-        executable='servo_node_main',
-        name='servo_node',
-        output='screen',
-        parameters=[
-            param_servo_description,
-            param_robot_description,
-            param_semantic_description,
-            param_kinematics_description
         ]
     )
 
@@ -182,22 +163,6 @@ def context_launch_description(context:LaunchContext, *args, **kwargs):
     )
 
 
-    ## containers
-    container = ComposableNodeContainer(
-        name="moveit_servo_container",
-        namespace="/",
-        package="rclcpp_components",
-        executable="component_container_mt",
-        composable_node_descriptions=[
-            ComposableNode(
-                package="moveit_servo",
-                plugin="moveit_servo::JoyToServoPub",
-                name="controller_to_servo_node",
-            )
-        ]
-    )
-
-
     ## debug message
     loggers = GroupAction(
         actions=[
@@ -205,16 +170,14 @@ def context_launch_description(context:LaunchContext, *args, **kwargs):
             LogInfo(msg=["LOAD KINEMATICS DESCRIPTION:: ", config_kinematics_description]),
             LogInfo(msg=["LOAD JOINT LIMITS DESCRIPTION:: ", config_joint_limits_description]),
             LogInfo(msg=["LOAD CONTROLLERS DESCRIPTION:: ", config_controllers_description]),
-            LogInfo(msg=["LOAD SERVO YAML:: ", config_servo_description]),
         ]
     )
 
 
     return [
         loggers,
-        node_move_group, node_moveit_servo, node_robot_state_publisher, node_stratic_tf, node_rviz,
+        node_move_group, node_robot_state_publisher, node_stratic_tf, node_rviz,
         launch_controller_server,
-        container
     ]
 
 
@@ -283,7 +246,7 @@ def generate_launch_description():
     ld.add_action(declare_kinematics_description)
     ld.add_action(declare_ompl_planning_description)
     ld.add_action(declare_controllers_description)
-    ld.add_action(declare_servo_description)
+    #ld.add_action(declare_servo_description)
     ld.add_action(declare_rviz)
 
 

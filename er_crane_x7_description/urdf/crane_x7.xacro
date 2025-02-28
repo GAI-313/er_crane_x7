@@ -3,7 +3,7 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:include filename="$(find crane_x7_description)/urdf/crane_x7_arm.xacro"/>
   <xacro:include filename="$(find crane_x7_description)/urdf/crane_x7_mounting_plate.xacro"/>
-  <xacro:include filename="$(find crane_x7_description)/urdf/crane_x7_wide_two_finger_gripper.xacro"/>
+  <xacro:include filename="$(find er_crane_x7_description)/urdf/crane_x7_wide_two_finger_gripper.xacro"/>
   <xacro:include filename="$(find crane_x7_description)/urdf/crane_x7_rt_logos.xacro"/>
 
   <material name="black">
@@ -184,6 +184,7 @@
 
     <!-- End effector -->
     <xacro:crane_x7_wide_two_finger_gripper
+        parent_link="${parent}"
         name_link_gripper_base="${name_link_gripper_base}"
         name_link_gripper_finger_a="${name_link_gripper_finger_a}"
         name_link_gripper_finger_b="${name_link_gripper_finger_b}"

@@ -13,6 +13,10 @@
   <xacro:include filename="$(find er_crane_x7_description)/urdf/crane_x7.gazebo.xacro"/>
   <xacro:include filename="$(find crane_x7_description)/urdf/crane_x7.gazebo_ros2_control.xacro"/>
 
+  <xacro:macro name="er_crane_x7 "/>
+
+  <xacro:arg name="parent_link" default="base_link" />
+  <xacro:arg name="gen_link" default="" />
   <xacro:arg name="use_gazebo" default="false" />
   <xacro:arg name="use_d435" default="false" />
   <xacro:arg name="port_name" default="/dev/ttyUSB0" />
@@ -22,17 +26,6 @@
   <xacro:arg name="manipulator_links_file_path" default="" />
   <xacro:arg name="gz_control_config_package" default="" />
   <xacro:arg name="gz_control_config_file_path" default="" />
-
-  <!-- Link to provide the location reference for the arm -->
-  <link name="base_link"/>
-
-  <!-- Used for fixing robot to Gazebo 'base_link' -->
-  <link name="world"/>
-
-  <joint name="base_link_to_world_joint" type="fixed">
-    <parent link="world"/>
-    <child link="base_link"/>
-  </joint>
 
   <xacro:property name="M_PI" value="3.14159"/>
 
@@ -112,12 +105,17 @@
   <xacro:property name="JOINT_HAND_LOWER_LIMIT" value="${radians(-5)}"/>
   <xacro:property name="JOINT_HAND_UPPER_LIMIT" value="${radians(90)}"/>
 
+  <xacro:if value="$(arg gen_link)">
+    <link name="base_link"/>
+  </xacro:if>
+
+
   <!-- Use the crane_x7 macro to configure a Crane X7 arm with desired joint
        velocities limit and lower/upper limits for the first joint. This
        allows accessing different operational areas, e.g. left-handed vs.
        right-handed robots. -->
   <xacro:crane_x7
-    parent="base_link"
+    parent="$(arg parent_link)"
     name_link_mounting_plate="${NAME_LINK_MOUNTING_PLATE}"
     name_link_base="${NAME_LINK_BASE}" 
     name_link_1="${NAME_LINK_1}"

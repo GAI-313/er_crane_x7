@@ -13,6 +13,8 @@ class RobotDescriptionLoader():
             get_package_share_directory('er_crane_x7_description'),
             'urdf',
             'crane_x7.urdf.xacro')
+        self.parent = 'base_link'
+        self.gen_link = 'true'
         self.port_name = '/dev/ttyUSB0'
         self.baudrate = '3000000'
         self.timeout_seconds = '1.0'
@@ -27,6 +29,8 @@ class RobotDescriptionLoader():
         return Command([
                 'xacro ',
                 self.robot_description_path,
+                ' parent:=', self.parent,
+                ' gen_link:=', self.gen_link,
                 ' port_name:=', self.port_name,
                 ' baudrate:=', self.baudrate,
                 ' timeout_seconds:=', self.timeout_seconds,
