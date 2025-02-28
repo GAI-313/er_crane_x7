@@ -10,26 +10,10 @@ from launch.conditions import IfCondition
 from launch.conditions import UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    declare_port_name = DeclareLaunchArgument(
-        'port_name',
-        default_value='/dev/ttyUSB0',
-        description='Set port name.'
-    )
-
-    declare_baudrate = DeclareLaunchArgument(
-        'baudrate',
-        default_value='3000000',
-        description='Set baudrate.'
-    )
-
-    declare_use_d435 = DeclareLaunchArgument(
-        'use_d435',
-        default_value='true',
-        description='Use d435.'
-    )
 
     config_file_path = os.path.join(
         get_package_share_directory('crane_x7_control'),
@@ -48,10 +32,34 @@ def generate_launch_description():
     description_loader.baudrate = LaunchConfiguration('baudrate')
     description_loader.use_d435 = LaunchConfiguration('use_d435')
     description_loader.timeout_seconds = '1.0'
+    description_loader.gen_link = 'true'
     description_loader.manipulator_config_file_path = config_file_path
     description_loader.manipulator_links_file_path = links_file_path
 
     description = description_loader.load()
+
+    declare_port_name = DeclareLaunchArgument(
+        'port_name',
+        default_value='/dev/ttyUSB0',
+        description='Set port name.'
+    )
+
+    declare_baudrate = DeclareLaunchArgument(
+        'baudrate',
+        default_value='3000000',
+        description='Set baudrate.'
+    )
+
+    declare_use_d435 = DeclareLaunchArgument(
+        'use_d435',
+        default_value='true',
+        description='Use d435.'
+    )
+    declare_description = DeclareLaunchArgument(
+        'description',
+        default_value=description,
+        description='Robot description'
+    )
 
     move_group = IncludeLaunchDescription(
             PythonLaunchDescriptionSource([
@@ -59,7 +67,7 @@ def generate_launch_description():
                 '/launch/run_move_group.launch.py']),
             condition=UnlessCondition(LaunchConfiguration('use_d435')),
             launch_arguments={
-                'loaded_description': description
+                'loaded_description': LaunchConfiguration("description")
             }.items()
         )
 
@@ -100,8 +108,9 @@ def generate_launch_description():
         declare_port_name,
         declare_baudrate,
         declare_use_d435,
+        declare_description,
         move_group,
         move_group_camera,
         control_node,
-        realsense_node
+        realsense_node,
     ])
