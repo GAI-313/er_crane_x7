@@ -138,7 +138,7 @@ def context_launch_description(context:LaunchContext, *args, **kwargs):
         package='rviz2',
         executable='rviz2',
         name='rviz2',
-        output='log',
+        output='own_log',
         arguments=['-d', config_rviz],
         parameters=[
             param_robot_description,
@@ -176,7 +176,7 @@ def context_launch_description(context:LaunchContext, *args, **kwargs):
 
     return [
         loggers,
-        node_move_group, node_robot_state_publisher, node_stratic_tf, node_rviz,
+        node_move_group, node_robot_state_publisher, node_rviz,
         launch_controller_server,
     ]
 
