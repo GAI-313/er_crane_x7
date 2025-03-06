@@ -60,6 +60,14 @@ def generate_launch_description():
         default_value=description,
         description='Robot description'
     )
+    declare_semantic = DeclareLaunchArgument(
+        'semantic',
+        default_value=os.path.join(
+            get_package_share_directory('er_crane_x7_moveit_config'), "config",
+            'crane_x7.srdf'
+        ),
+        description='Semantic robot description'
+    )
 
     move_group = IncludeLaunchDescription(
             PythonLaunchDescriptionSource([
@@ -79,7 +87,8 @@ def generate_launch_description():
                 '/launch/moveit_group_launch.py']),
             condition=IfCondition(LaunchConfiguration('use_d435')),
             launch_arguments={
-                'robot_description': description,
+                'robot_description': LaunchConfiguration("description"),
+                'semantic_description': LaunchConfiguration("semantic"),
                 'rviz_config_file': rviz_config_file
             }.items()
         )
@@ -88,7 +97,7 @@ def generate_launch_description():
             PythonLaunchDescriptionSource([
                 get_package_share_directory('crane_x7_control'),
                 '/launch/crane_x7_control.launch.py']),
-            launch_arguments={'loaded_description': description}.items()
+            launch_arguments={'loaded_description': LaunchConfiguration("description")}.items()
         )
 
     realsense_node = IncludeLaunchDescription(
@@ -109,6 +118,7 @@ def generate_launch_description():
         declare_baudrate,
         declare_use_d435,
         declare_description,
+        declare_semantic,
         move_group,
         move_group_camera,
         control_node,

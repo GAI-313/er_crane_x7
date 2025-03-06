@@ -13,7 +13,7 @@ class RobotDescriptionLoader():
             get_package_share_directory('er_crane_x7_description'),
             'urdf',
             'crane_x7.urdf.xacro')
-        self.parent = 'base_link'
+        self.parent = ''
         self.gen_link = 'false'
         self.port_name = '/dev/ttyUSB0'
         self.baudrate = '3000000'
